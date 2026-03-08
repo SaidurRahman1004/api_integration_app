@@ -10,11 +10,12 @@ import '../../../core/global_widgets/empty_state.dart';
 import '../../../core/global_widgets/loading_indicator.dart';
 
 class PostListScreen extends StatelessWidget {
-  const PostListScreen({super.key});
+   PostListScreen({super.key});
+  final PostController postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {
-    final PostController postController = Get.put(PostController());
+
     //load all posts when Screen is opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       postController.fetchPosts();

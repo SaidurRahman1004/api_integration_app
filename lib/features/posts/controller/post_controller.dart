@@ -1,6 +1,7 @@
 import 'package:api_integration_app/core/const/api_urls.dart';
 import 'package:api_integration_app/core/network_caller/network_caller.dart';
 import 'package:api_integration_app/features/posts/model/post_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
@@ -99,11 +100,11 @@ class PostController extends GetxController {
     isLoading.value = false;
     if (response.isSuccess) {
       int isNotFound = -1;
-      final index = postList.indexWhere((post)=>post.id == id);
-      if(index != isNotFound){
-        postList[index]= PostModel.fromJson(response.responseData);
+      final index = postList.indexWhere((post) => post.id == id);
+      if (index != isNotFound) {
+        postList[index] = PostModel.fromJson(response.responseData);
       }
-//Update selected post
+      //Update selected post
       selectedPost.value = PostModel.fromJson(response.responseData);
       Get.snackbar(
         'Success',
@@ -121,28 +122,37 @@ class PostController extends GetxController {
     }
   }
 
+  // Optimistic Delete
   Future<bool> deletePost(int id) async {
-    if (isLoading.value) return false;
-    isLoading.value = true;
-    final response = await NetworkCaller.deleteRequest(
-      url: ApiUrls.postsById(id),
-    );
-    isLoading.value = false;
-    if (response.isSuccess) {
-      postList.removeWhere((post) => post.id == id);
-      Get.snackbar(
-        'Success',
-        'Post deleted successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return true;
-    } else {
-      Get.snackbar(
-        'Error',
-        response.errorMessage ?? 'Failed to delete post',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return false;
-    }
+    // find post from list
+    final int removedIndex = postList.indexWhere((post) => post.id == id);
+    if (removedIndex == -1) return false;
+    final PostModel removedPost = postList[removedIndex];
+
+    // remove post from list without isloading
+    postList.removeAt(removedIndex);
+
+    //call api from bg without await
+    NetworkCaller.deleteRequest(url: ApiUrls.postsById(id)).then((response) {
+      if (response.isSuccess) {
+        Get.snackbar(
+          'Deleted',
+          'Post deleted successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        // if api fail then rollback
+        postList.insert(removedIndex, removedPost);
+        Get.snackbar(
+          'Error',
+          response.errorMessage ?? 'Failed to delete post. Restored.',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    });
+
+    return true;
   }
 }

@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Api Intrigration App',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      home: const PostListScreen(),
+      home:  PostListScreen(),
     );
   }
 }
