@@ -53,7 +53,7 @@ class PostController extends GetxController {
     }
   }
 
-  //create
+  //createx //
   Future<bool> createPost({required String title, required String body}) async {
     if (isLoading.value) return false;
     isLoading.value = true;
