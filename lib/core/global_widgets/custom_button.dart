@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widget_previews.dart';
 
 import '../const/app_colors.dart';
 
@@ -48,10 +47,4 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
-}
-
-//Widget Preview
-@Preview()
-Widget mySampleText() {
-  return CustomButton(text: 'Click', onPressed: () {});
 }
