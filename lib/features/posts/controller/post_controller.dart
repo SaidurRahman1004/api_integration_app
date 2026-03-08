@@ -1,7 +1,6 @@
 import 'package:api_integration_app/core/const/api_urls.dart';
 import 'package:api_integration_app/core/network_caller/network_caller.dart';
 import 'package:api_integration_app/features/posts/model/post_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
