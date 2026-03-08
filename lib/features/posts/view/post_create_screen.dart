@@ -102,6 +102,8 @@ class PostCreateScreen extends StatelessWidget {
     TextEditingController bodyController,
   ) async {
     if (formKey.currentState!.validate()) {
+      FocusManager.instance.primaryFocus?.unfocus();
+
       final success = await postController.createPost(
         title: titleController.text.trim(),
         body: bodyController.text.trim(),

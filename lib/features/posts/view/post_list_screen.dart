@@ -63,8 +63,19 @@ class PostListScreen extends StatelessWidget {
       //floating button
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.to(() => PostCreateScreen()),
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Create Post', style: TextStyle(color: Colors.white)),
+        backgroundColor: AppColors.primary,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        icon: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
+        label: const Text(
+          'Create Post',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
     );
   }
@@ -87,7 +98,10 @@ class PostListScreen extends StatelessWidget {
               Get.back();
               postController.deletePost(postId);
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.danger),
+            ),
           ),
         ],
       ),
