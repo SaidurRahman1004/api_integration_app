@@ -199,15 +199,22 @@ class PostDetailsScreen extends StatelessWidget {
     TextEditingController bodyController,
     RxBool isEditMode,
   ) async {
-    if (formKey.currentState!.validate()) {
-      final success = await postController.updatePost(
-        id: postId,
-        title: titleController.text.trim(),
-        body: bodyController.text.trim(),
-      );
-      if (success) {
-        isEditMode.value = false;
-      }
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (postController.isLoading.value) {
+      return;
+    }
+
+    final success = await postController.updatePost(
+      id: postId,
+      title: titleController.text.trim(),
+      body: bodyController.text.trim(),
+    );
+
+    if (success) {
+      isEditMode.value = false;
     }
   }
 }

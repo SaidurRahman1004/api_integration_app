@@ -101,16 +101,22 @@ class PostCreateScreen extends StatelessWidget {
     TextEditingController titleController,
     TextEditingController bodyController,
   ) async {
-    if (formKey.currentState!.validate()) {
-      FocusManager.instance.primaryFocus?.unfocus();
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
 
-      final success = await postController.createPost(
-        title: titleController.text.trim(),
-        body: bodyController.text.trim(),
-      );
-      if (success) {
-        Get.back();
-      }
+    if (postController.isLoading.value) {
+      return;
+    }
+
+    // Create post
+    final success = await postController.createPost(
+      title: titleController.text.trim(),
+      body: bodyController.text.trim(),
+    );
+
+    if (success) {
+      Get.back(); // এখন কাজ করবে
     }
   }
 }

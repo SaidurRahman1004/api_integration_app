@@ -4,7 +4,7 @@ import 'package:api_integration_app/features/posts/model/post_model.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
-  final RxBool isLoading = true.obs;
+  final RxBool isLoading = false.obs;
   final RxList<PostModel> postList = <PostModel>[].obs;
   final Rx<PostModel?> selectedPost = Rx<PostModel?>(null);
 
@@ -54,6 +54,7 @@ class PostController extends GetxController {
 
   //create
   Future<bool> createPost({required String title, required String body}) async {
+    if (isLoading.value) return false;
     isLoading.value = true;
     final response = await NetworkCaller.postRequest(
       url: ApiUrls.posts,
@@ -63,11 +64,15 @@ class PostController extends GetxController {
     if (response.isSuccess) {
       final newPost = PostModel.fromJson(response.responseData);
       postList.insert(0, newPost);
+      Get.back();
       Get.snackbar(
         'Success',
         'Post created successfully!',
         snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
       );
+      //back previous page with dealy
+      await Future.delayed(const Duration(milliseconds: 300));
       return true;
     } else {
       Get.snackbar(
@@ -85,6 +90,7 @@ class PostController extends GetxController {
     required String title,
     required String body,
   }) async {
+    if (isLoading.value) return false;
     isLoading.value = true;
     final response = await NetworkCaller.putRequest(
       url: ApiUrls.postsById(id),
@@ -97,6 +103,8 @@ class PostController extends GetxController {
       if(index != isNotFound){
         postList[index]= PostModel.fromJson(response.responseData);
       }
+//Update selected post
+      selectedPost.value = PostModel.fromJson(response.responseData);
       Get.snackbar(
         'Success',
         'Post updated successfully!',
@@ -114,6 +122,7 @@ class PostController extends GetxController {
   }
 
   Future<bool> deletePost(int id) async {
+    if (isLoading.value) return false;
     isLoading.value = true;
     final response = await NetworkCaller.deleteRequest(
       url: ApiUrls.postsById(id),
