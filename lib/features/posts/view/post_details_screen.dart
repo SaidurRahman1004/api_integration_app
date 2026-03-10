@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import '../../../core/const/app_colors.dart';
 import '../../../core/global_widgets/loading_indicator.dart';
 import '../controller/post_controller.dart';
+import '../widgets/post_id_badge.dart';
+import '../widgets/post_user_info_tile.dart' show PostUserInfoTile;
 
 class PostDetailsScreen extends StatelessWidget {
   final int postId;
@@ -62,11 +64,11 @@ class PostDetailsScreen extends StatelessWidget {
               crossAxisAlignment: .start,
               children: [
                 // Post ID Badge
-                _buildPostIdBadge(post.id),
+                PostIdBadge(id: post.id),
                 const SizedBox(height: 20),
 
                 // User ID Info
-                _buildUserInfo(post.userId),
+                PostUserInfoTile(userId: post.userId),
                 const SizedBox(height: 20),
                 // Title Field
                 Obx(
@@ -124,54 +126,6 @@ class PostDetailsScreen extends StatelessWidget {
           ),
         );
       }),
-    );
-  }
-
-  //Post ID Badge
-  Widget _buildPostIdBadge(int id) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.secondary],
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.tag, color: Colors.white, size: 28),
-          const SizedBox(width: 12),
-          Text(
-            'Post ID: $id',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // User Info User id
-  Widget _buildUserInfo(int userId) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.person, color: Colors.grey.shade700),
-          const SizedBox(width: 8),
-          Text(
-            'User ID: $userId',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
-          ),
-        ],
-      ),
     );
   }
 

@@ -8,14 +8,15 @@ import 'package:get/get.dart';
 import '../../../core/const/app_colors.dart';
 import '../../../core/global_widgets/empty_state.dart';
 import '../../../core/global_widgets/loading_indicator.dart';
+import '../widgets/delete_confirm_dialog.dart';
 
 class PostListScreen extends StatelessWidget {
-   PostListScreen({super.key});
+  PostListScreen({super.key});
+
   final PostController postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {
-
     //load all posts when Screen is opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       postController.fetchPosts();
@@ -25,13 +26,6 @@ class PostListScreen extends StatelessWidget {
         title: const Text('Posts'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => postController.fetchPosts(),
-            tooltip: 'Refresh',
-          ),
-        ],
       ),
       body: Obx(() {
         //loading
@@ -54,8 +48,12 @@ class PostListScreen extends StatelessWidget {
               return PostCard(
                 post: post,
                 onTap: () => Get.to(() => PostDetailsScreen(postId: post.id)),
-                onDelete: () =>
-                    _showDeleteDialog(context, postController, post.id),
+                onDelete: () {
+                  DeleteConfirmDialog.show(
+                    context,
+                    onDelete: () => postController.deletePost(post.id),
+                  );
+                },
               );
             },
           ),
@@ -77,34 +75,6 @@ class PostListScreen extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-      ),
-    );
-  }
-
-  //Delet Confirm dialog
-  void _showDeleteDialog(
-    BuildContext context,
-    PostController postController,
-    int postId,
-  ) {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Delete Post'),
-        content: const Text('Are you sure you want to delete this post?'),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
-
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              postController.deletePost(postId);
-            },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppColors.danger),
-            ),
-          ),
-        ],
       ),
     );
   }

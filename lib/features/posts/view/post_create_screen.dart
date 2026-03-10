@@ -78,13 +78,15 @@ class PostCreateScreen extends StatelessWidget {
               Obx(
                 () => CustomButton(
                   text: 'Create Post',
-                  onPressed: () => _onTapCreatePost(
-                    formKey,
-                    postController,
-                    titleController,
-                    bodyController,
-                  ),
                   isLoading: postController.isLoading.value,
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      postController.createPost(
+                        title: titleController.text.trim(),
+                        body: bodyController.text.trim(),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
@@ -92,31 +94,5 @@ class PostCreateScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  //Create Post
-  Future<void> _onTapCreatePost(
-    GlobalKey<FormState> formKey,
-    PostController postController,
-    TextEditingController titleController,
-    TextEditingController bodyController,
-  ) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (postController.isLoading.value) {
-      return;
-    }
-
-    // Create post
-    final success = await postController.createPost(
-      title: titleController.text.trim(),
-      body: bodyController.text.trim(),
-    );
-
-    if (success) {
-      Get.back(); // এখন কাজ করবে
-    }
   }
 }

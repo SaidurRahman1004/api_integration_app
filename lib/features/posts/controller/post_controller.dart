@@ -71,8 +71,7 @@ class PostController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
       );
-      //back previous page with dealy
-      await Future.delayed(const Duration(milliseconds: 300));
+
       return true;
     } else {
       Get.snackbar(
